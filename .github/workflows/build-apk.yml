@@ -14,8 +14,8 @@ jobs:
       - name: Projeyi al
         uses: actions/checkout@v4
 
-      - name: ZIP dosyasini ac
-        run: unzip -o HukukAsistan_AI_v0.2_github_actions.zip
+      - name: Yeni surumu ac
+        run: unzip -o HukukAsistan_AI_v0.3_firebase.zip
 
       - name: Flutter kur
         uses: subosito/flutter-action@v2
@@ -24,7 +24,13 @@ jobs:
 
       - name: Android dosyalarini olustur
         working-directory: HukukAsistan_AI_v0.2
-        run: flutter create --platforms=android .
+        run: flutter create --platforms=android --org com.example .
+
+      - name: Firebase ayarlarini ekle
+        run: |
+          cp google-services.json HukukAsistan_AI_v0.2/android/app/google-services.json
+          sed -i '/id("com.android.application") version/a\    id("com.google.gms.google-services") version "4.4.4" apply false' HukukAsistan_AI_v0.2/android/settings.gradle.kts
+          sed -i '/id("com.android.application")/a\    id("com.google.gms.google-services")' HukukAsistan_AI_v0.2/android/app/build.gradle.kts
 
       - name: Paketleri yukle
         working-directory: HukukAsistan_AI_v0.2
@@ -37,5 +43,5 @@ jobs:
       - name: APK dosyasini kaydet
         uses: actions/upload-artifact@v4
         with:
-          name: HukukAsistan-AI-APK
+          name: HukukAsistan-AI-v0.3-APK
           path: HukukAsistan_AI_v0.2/build/app/outputs/flutter-apk/app-release.apk
